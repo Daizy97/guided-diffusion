@@ -7,16 +7,23 @@ from .unet import SuperResModel, UNetModel, EncoderUNetModel
 
 NUM_CLASSES = 1000
 
+def attack_target_model_defaults():
+    """
+    Defaults for attack the target model with guided diffusion model
+    """
+    return dict(
+        target_model='vit'  # ['resnet50', 'inceptionv3', 'vit']
+    )
 
 def diffusion_defaults():
     """
     Defaults for image and classifier training.
     """
     return dict(
-        learn_sigma=False,
+        learn_sigma=True,
         diffusion_steps=1000,
         noise_schedule="linear",
-        timestep_respacing="",
+        timestep_respacing="250",
         use_kl=False,
         predict_xstart=False,
         rescale_timesteps=False,
@@ -29,7 +36,7 @@ def classifier_defaults():
     Defaults for classifier models.
     """
     return dict(
-        image_size=64,
+        image_size=256,
         classifier_use_fp16=False,
         classifier_width=128,
         classifier_depth=2,
@@ -45,20 +52,20 @@ def model_and_diffusion_defaults():
     Defaults for image training.
     """
     res = dict(
-        image_size=64,
-        num_channels=128,
+        image_size=256,
+        num_channels=256,
         num_res_blocks=2,
         num_heads=4,
         num_heads_upsample=-1,
-        num_head_channels=-1,
-        attention_resolutions="16,8",
+        num_head_channels=64,
+        attention_resolutions="32,16,8",
         channel_mult="",
         dropout=0.0,
-        class_cond=False,
+        class_cond=True,
         use_checkpoint=False,
         use_scale_shift_norm=True,
-        resblock_updown=False,
-        use_fp16=False,
+        resblock_updown=True,
+        use_fp16=True,
         use_new_attention_order=False,
     )
     res.update(diffusion_defaults())
